@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+</head>
+<body>
+    <div class="container">
+        <div data-index="0" class="box" ></div>
+        <div data-index="1" class="box" ></div>
+        <div data-index="2" class="box" ></div>
+        <div data-index="3" class="box" ></div>
+        <div data-index="4" class="box" ></div>
+        <div data-index="5" class="box" ></div>
+        <div data-index="6" class="box" ></div>
+        <div data-index="7" class="box" ></div>
+        <div data-index="8" class="box" ></div>
+    </div>
+    <div id="status">Play Now</div>
+    <button id="button">Restart</button>
+</body>
+</html>
+<style>
+    #status
+    {
+        color:white;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }
+* {
+    margin:0;
+    padding:0;
+}
+body {
+    display:flex;
+    flex-direction: column;
+    height:100vh;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(75, 70, 70);
+}
+.container {
+    display:grid;
+    grid-template-columns: repeat(3,auto);
+}
+.box {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border:2px solid #eccc68;
+    width:100px;
+    height:100px;
+    box-shadow:0 0 0 2px #eccc68;
+    font-size: 25px;
+}
+.box:hover {
+    cursor:pointer;
+}
+#status {
+    padding:20px;
+    font-size: 25px;
+    font-weight: 500;
+}
+#button {
+    width:150px;
+    height:40px;
+    font-size:18px;
+    color:white;
+    background-color: #ff4757;
+    border:none;
+    border-radius: 5px;
+}
+#button:hover {
+    background-color: yellow;
+    cursor:pointer;
+    color:black;
+}
+.win {
+    animation: winner ease-in-out 1s infinite;
+}
+@keyframes winner {
+    0%{background-color: #ff4757;}
+    100%{background-color: #130f40;}
+
+    
+}
+</style>
+<script>
+    let datas = document.querySelectorAll('.box')
+    const options = [
+    [0,1,2],
+    [3,4,5],
+    [6,7,8],
+    [0,3,6],
+    [1,4,7],
+    [2,5,8],
+    [0,4,8],
+    [2,4,6],
+    ];
+    let btn = document.querySelector('#button') 
+    let ans = document.querySelector('#status')
+    let x = '<img src="https://img.icons8.com/ios-filled/50/x.png" alt="X">';
+    let y = '<img src="https://img.icons8.com/ios-filled/50/o.png" alt="O">';
+
+    btn.addEventListener('click',restart);
+    let option = ["","","","","","","","",""]
+    let current_player = x
+    let running = false 
+    let player ="X";
+    init()
+    function init()
+    {
+      datas.forEach(box=>box.addEventListener('click',clicked));
+      ans.textContent = `${player} Your Turn!`
+      running = true
+    }
+    function clicked()
+    { 
+       let index = this.dataset.index;
+       if(option[index]!="" || !running)
+       {
+         return;
+       }
+       updatebox(this,index);
+       checkwinner(  )
+    }
+
+    function updatebox(box,index)
+    {
+      option[index] = player 
+      box.innerHTML = current_player
+    }
+    function checkwinner()
+    {
+        let iswon = false;
+      for(let i=0;i<options.length;i++)
+      {
+        const condition = options[i];
+        const box1 = option[condition[0]]
+        const box2 = option[condition[1]]
+        const box3 = option[condition[2]]
+        if(box1=="" || box2=="" || box3=="")
+        {
+            continue
+        }
+        if(box1==box2 && box2==box3)
+        {
+            iswon = true;
+            datas[condition[0]].classList.add('win');
+            datas[condition[1]].classList.add('win');
+            datas[condition[2]].classList.add('win');
+        }
+      }
+      if(iswon)
+      {
+          ans.textContent = `${player} Won!!`
+          running = false;
+      }
+      else if(!option.includes(""))
+      {
+          ans.textContent = `Game Draw!!!`
+          running = false;
+      }
+      else{
+        playerchange()
+      }
+    }
+    function restart()
+    {
+      option = ["","","","","","","","",""]
+      current_player = x
+      running = true
+       player ="X";
+        datas.forEach(box => box.innerHTML = "")
+        ans.textContent = `${player} Your Turn!`
+        datas.forEach(box=> 
+        box.classList.remove('win'))
+        
+    }
+    function playerchange()
+    {
+        if(player==='X')
+        {
+           player = 'O'
+        }
+        else{
+            player = 'X'
+        }
+        ans.textContent = `${player} Your Turn!`
+        if(current_player==x){
+            current_player = y
+        }
+        else{
+            current_player = x
+        }
+    }
+
+
+</script>
